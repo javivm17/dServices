@@ -1,5 +1,5 @@
 /**
- * Use this file to configure your truffle project. It's seeded with some
+* Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
  * compilation and testing. Uncomment the ones you need or modify
  * them to suit your project as necessary.
@@ -42,7 +42,7 @@ module.exports = {
     // options below to some value.
     //
      development: {
-      host: "127.0.0.1",     // Localhost (default: none)
+      host: "0.0.0.0",     // Localhost (default: none)
       port: 7545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
     },

@@ -1,23 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
+import OfferServices from './components/OfferServices';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Llora mirando gráficas
-        </p>
-        <a
-          className="App-link"
-          href="https://tradingview.es"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          No clickes si quieres seguir teniendo dinero
-        </a>
-      </header>
+      <OfferServices />
     </div>
   );
 }
