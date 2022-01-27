@@ -1,6 +1,6 @@
 import { Button } from 'primereact/button';
 import { useEffect, useState } from "react";
-
+import truffleContract from '@truffle/contract'
 
 const OfferServices = () => {
     const [web3Provider, setProvider] = useState([]);
@@ -9,16 +9,21 @@ const OfferServices = () => {
     const [contract,setContract]= useState([]);
     const [offers,setOffers]= useState([]);
 
-    useEffect (async () => {
-        const res2 = require("../../node_modules/@truffle/contract/dist/truffle-contract")
-        const res = await fetch("../../../backend/build/OfferServices.json")
-        const offerContractJson = await res.json()
-        const offerContract = TruffleContract(offerContractJson)
+    useEffect (() => {
+        loadPage();
+        
+    },[])
+
+    async function loadPage() {
+        const res = await fetch("./OfferServices.json");
+        const resJSON = res.json()
+        console.log(resJSON["abi"])
+        const offerContract = TruffleContract(resJSON)
         offerContract.setProvider(web3Provider)
         await setContract(offerContract.deployed())
         const offerCounter = await contract.offerCounter()
         const offerCounterNum = offerCounter.toNumber()
-        
+
         let html =''
         for (let i = 1; i <= offerCounterNum; i++) {
             
@@ -42,8 +47,7 @@ const OfferServices = () => {
 
         }
         setOffers(html)
-    },[])
-
+    }
     async function loadEthereum(){
         if (window.ethereum){
             setProvider(window.ethereum)
@@ -75,7 +79,6 @@ const OfferServices = () => {
                     {offers}
                 </div>
             </div>
-
         </div>
     )
 }
