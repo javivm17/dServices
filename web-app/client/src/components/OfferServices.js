@@ -1,9 +1,9 @@
 import { Button } from 'primereact/button';
 import { useEffect, useState } from "react";
+import { Dialog } from 'primereact/dialog';
 import Web3 from "web3";
 import React from 'react'
 import OfferServicesContract from "../contracts/OfferServices.json";
-
 
 const OfferServices = () => {
     const [web3Provider, setProvider] = useState([]);
@@ -13,7 +13,60 @@ const OfferServices = () => {
     const [offers,setOffers]= useState([]);
     const [networkId, setNetworkId]= useState([]);
     const [deployedNetwork, setDeployedNetwork]= useState([]);
-    
+    const [displayResponsive, setDisplayResponsive] = useState(false);
+    const [title, setTitle]= useState('');
+    const [description, setDescription]= useState('');
+
+    const dialogFuncMap = {
+        'displayResponsive': setDisplayResponsive
+    }
+    const [position, setPosition] = useState('center');
+    const onClick = (name, position) => {
+        dialogFuncMap[`${name}`](true);
+
+        if (position) {
+            setPosition(position);
+        }
+    }
+
+    const onHide = (name) => {
+        dialogFuncMap[`${name}`](false);
+    }
+
+    function titleHandler(event){
+        setTitle(event.target.value)
+    }
+    function descriptionHandler(event){
+        setDescription(event.target.value)
+    }
+    async function proccessForm(event){
+        event.preventDefault()
+        await contract.methods.createOffer(title,description).send({from :account})
+        const offerCounter = await contract.methods.offerCounter().call()
+            let html =''
+            for (let i = 1; i <= offerCounter; i++) {  
+                const offer = await contract.methods.offers(i).call()
+                const title = offer[1]
+                const description = offer[2]
+                const owner = offer[3]
+                const createdAt = offer[4]
+                let offerElement = `
+                    <div class="card bg-dark rounded-0 mb-2">
+                        <div class="card-header ">
+                            <span >${title} - ${owner}</span>
+                        </div>
+                        <div class="card-body">
+                            <span>${description}</span>
+                            <p class="text-muted">Created at: ${new Date(createdAt * 1000).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    `
+                html += offerElement
+            }
+            setOffers(html)
+            onHide('displayResponsive')
+    }
+
     async function loadEthereum(){
         if (window.ethereum) {
             const web3 = new Web3(window.ethereum);
@@ -90,12 +143,22 @@ const OfferServices = () => {
             <div class="card bg-dark">
                 <div class="card-header">
                     <h4>Offer Services</h4>
+                    <Button disabled={connectedTest != "Connected"} className='p-button-outlined p-button-warning p-button-sm' label="Create new offer" icon="pi pi-external-link" onClick={() => onClick('displayResponsive')} />
                 </div>
                 <div class="card-body">
                     <div className="content" dangerouslySetInnerHTML={{__html: offers}}></div>
                 </div>
             </div>
+            <Dialog header="Create a new offer" visible={displayResponsive} onHide={() => onHide('displayResponsive')} breakpoints={{'960px': '75vw'}} style={{width: '50vw'}}>
+                <form class="card card-body rounded-0" id="taskForm">
+                    <input name="title" type="text" placeholder="Write a title" class="form-control rounded-0 border-0 my-4" onChange={titleHandler}/>
+                    <textarea name="description" rows="2" class="form-control rounded-0 border-0 my-4" placeholder="Write the offer description" onChange={descriptionHandler}></textarea>
+                    <button class="btn btn-primary" onClick={proccessForm}>Save</button>
+                </form>
+            </Dialog>
         </div>
     )
 }
+
+                
 export default OfferServices;
