@@ -7193,12 +7193,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xf2dC47c6391156eD3dD0e6F6B9ef2b4A9a32DCf3",
-      "transactionHash": "0x1f173fdbb941afd2c770d98aeeedee713289f05537ed213dea87de58633d3d07"
+      "address": "0xC0CE04fE5866695215036601967831991A39AEF6",
+      "transactionHash": "0x77059419f831e6096bc5acf4ef955aefda600342e4f37e80d4d6093cf6e13006"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-02-01T18:17:24.995Z",
+  "updatedAt": "2022-02-01T21:31:18.286Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

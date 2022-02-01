@@ -1,0 +1,15 @@
+.p-datatable-tbody tr {
+    background: #c1c7da !important;
+  }
+.p-datatable-thead tr th{
+    background: #3e6ef1 !important;
+    color:white;
+}
+.p-paginator{
+    background: #c1c7da!important;
+
+}
+
+.p-datatable-thead span{
+    color:white;
+}

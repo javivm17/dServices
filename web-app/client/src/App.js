@@ -1,4 +1,4 @@
-import './App.css';
+import './css/App.css';
 import OfferServices from './components/OfferServices';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';

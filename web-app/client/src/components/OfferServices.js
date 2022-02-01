@@ -4,6 +4,10 @@ import { Dialog } from 'primereact/dialog';
 import Web3 from "web3";
 import React from 'react'
 import OfferServicesContract from "../contracts/OfferServices.json";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Paginator } from 'primereact/paginator';
+import '../css/Datatable.css';
 
 const OfferServices = () => {
     const [web3Provider, setProvider] = useState([]);
@@ -16,6 +20,10 @@ const OfferServices = () => {
     const [displayResponsive, setDisplayResponsive] = useState(false);
     const [title, setTitle]= useState('');
     const [description, setDescription]= useState('');
+    const [offerDetail, setOfferDetail]= useState('');
+    
+    const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
+    const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
 
     const dialogFuncMap = {
         'displayResponsive': setDisplayResponsive
@@ -39,32 +47,43 @@ const OfferServices = () => {
     function descriptionHandler(event){
         setDescription(event.target.value)
     }
+    function detailsButton(rowData){
+        return(
+            <Button icon="pi pi-external-link" className="p-button-rounded p-button-secondary p-mr-2 p-button-info" onClick={() => setOfferDetail(
+            <Dialog header="Offer Details" visible={true} onHide={() => setOfferDetail(null)} breakpoints={{'960px': '75vw'}} style={{width: '50vw'}}>
+                <div class="card">
+                <div class="card-header c">
+                    <h5 class="text-center">{rowData.title}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-center">{rowData.description}</p>
+                </div>
+            </div>
+            </Dialog>)
+            }/>
+        )
+    }
     async function proccessForm(event){
         event.preventDefault()
         await contract.methods.createOffer(title,description).send({from :account})
         const offerCounter = await contract.methods.offerCounter().call()
-            let html =''
-            for (let i = 1; i <= offerCounter; i++) {  
-                const offer = await contract.methods.offers(i).call()
-                const title = offer[1]
-                const description = offer[2]
-                const owner = offer[3]
-                const createdAt = offer[4]
-                let offerElement = `
-                    <div class="card bg-dark rounded-0 mb-2">
-                        <div class="card-header ">
-                            <span >${title} - ${owner}</span>
-                        </div>
-                        <div class="card-body">
-                            <span>${description}</span>
-                            <p class="text-muted">Created at: ${new Date(createdAt * 1000).toLocaleString()}</p>
-                        </div>
-                    </div>
-                    `
-                html += offerElement
+        let offerList =[]
+        for (let i = 1; i <= offerCounter; i++) {  
+            const offer = await contract.methods.offers(i).call()
+            const title = offer[1]
+            const description = offer[2]
+            const owner = offer[3]
+            const createdAt = offer[4]
+            let offerElement = {
+                'owner': owner,
+                'title': title,
+                'description':description,
+                'createdAt':new Date(createdAt * 1000).toLocaleString()
             }
-            setOffers(html)
-            onHide('displayResponsive')
+            offerList.push(offerElement)
+        }
+        setOffers(offerList)
+        onHide('displayResponsive')
     }
 
     async function loadEthereum(){
@@ -86,27 +105,22 @@ const OfferServices = () => {
               );
             setContract(instance)
             const offerCounter = await instance.methods.offerCounter().call()
-            let html =''
+            let offerList =[]
             for (let i = 1; i <= offerCounter; i++) {  
                 const offer = await instance.methods.offers(i).call()
                 const title = offer[1]
                 const description = offer[2]
                 const owner = offer[3]
                 const createdAt = offer[4]
-                let offerElement = `
-                    <div class="card bg-dark rounded-0 mb-2">
-                        <div class="card-header ">
-                            <span >${title} - ${owner}</span>
-                        </div>
-                        <div class="card-body">
-                            <span>${description}</span>
-                            <p class="text-muted">Created at: ${new Date(createdAt * 1000).toLocaleString()}</p>
-                        </div>
-                    </div>
-                    `
-                html += offerElement
+                let offerElement = {
+                    'owner': owner,
+                    'title': title,
+                    'description':description,
+                    'createdAt':new Date(createdAt * 1000).toLocaleString()
+                }
+                offerList.push(offerElement)
             }
-            setOffers(html)
+            setOffers(offerList)
             return web3;
           }
           // Legacy dapp browsers...
@@ -131,22 +145,26 @@ const OfferServices = () => {
 
     return(
         <div>
-            <div class="row">
-                <div class="col-md-11">
-                    <h1 class="c">dServices</h1>
+            <div class="card headerService"> 
+                <div className="card-header">
+                    <h3>Offer Services</h3>
+                    <hr></hr>
+                    <Button disabled={connectedTest != "Connected"} className='p-button-outlined p-button-info p-button-sm' label="Create new offer" icon="pi pi-external-link" onClick={() => onClick('displayResponsive')} />
+                    <Button disabled={connectedTest == "Connected"} onClick={loadEthereum} label={connectedTest} className="p-button-raised p-button-info p-button-sm mx-5" />
+                    <br></br><br></br>
                     <p class="text-muted">Your account is: {account}</p>
                 </div>
-                <div class="col-md-1 py-3">
-                    <Button disabled={connectedTest == "Connected"} onClick={loadEthereum} label={connectedTest} className="p-button-raised p-button-warning" />
-                </div>
-            </div>
-            <div class="card bg-dark">
-                <div class="card-header">
-                    <h4>Offer Services</h4>
-                    <Button disabled={connectedTest != "Connected"} className='p-button-outlined p-button-warning p-button-sm' label="Create new offer" icon="pi pi-external-link" onClick={() => onClick('displayResponsive')} />
-                </div>
-                <div class="card-body">
-                    <div className="content" dangerouslySetInnerHTML={{__html: offers}}></div>
+                <div className="card-body offerDatatable">
+                    <DataTable styleClass='offerDatatable'value={offers} paginator
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" rows={10} rowsPerPageOptions={[5,10,20]}
+                    paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}>
+
+                        <Column header="Title" sortable filter field="title"></Column>
+                        <Column header="Created At" sortable filter field="createdAt"></Column>
+                        <Column header="Owner" sortable filter field="owner"></Column>
+                        <Column header="Details" body={detailsButton}></Column>
+                    </DataTable>
                 </div>
             </div>
             <Dialog header="Create a new offer" visible={displayResponsive} onHide={() => onHide('displayResponsive')} breakpoints={{'960px': '75vw'}} style={{width: '50vw'}}>
@@ -156,6 +174,8 @@ const OfferServices = () => {
                     <button class="btn btn-primary" onClick={proccessForm}>Save</button>
                 </form>
             </Dialog>
+            {offerDetail}
+            
         </div>
     )
 }
