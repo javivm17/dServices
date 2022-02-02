@@ -49,7 +49,7 @@ const OfferServices = () => {
     }
     function detailsButton(rowData){
         return(
-            <Button icon="pi pi-external-link" className="p-button-rounded p-button-secondary p-mr-2 p-button-info" onClick={() => setOfferDetail(
+            <Button icon="pi pi-external-link" className="p-button-rounded p-button-sm p-button-info" onClick={() => setOfferDetail(
             <Dialog header="Offer Details" visible={true} onHide={() => setOfferDetail(null)} breakpoints={{'960px': '75vw'}} style={{width: '50vw'}}>
                 <div class="card">
                 <div class="card-header c">
@@ -63,6 +63,40 @@ const OfferServices = () => {
             }/>
         )
     }
+
+    function deleteButton(rowData){
+        if (rowData.owner == account){
+            return(
+                <Button icon="pi pi-trash" className="p-button-sm p-button-rounded p-button-danger" onClick={() => deleteOffer(rowData.id)}/>
+            )
+        }
+    }
+
+    async function deleteOffer(id){
+        await contract.methods.deleteOffer(id).send({from :account})
+        const offerCounter = await contract.methods.offerCounter().call()
+        let offerList =[]
+        for (let i = 1; i <= offerCounter; i++) {  
+            const offer = await contract.methods.offers(i).call()
+            const id = offer[0]
+            const title = offer[1]
+            const description = offer[2]
+            const owner = offer[3]
+            const createdAt = offer[4]
+            let offerElement = {
+                'id': id,
+                'owner': owner,
+                'title': title,
+                'description':description,
+                'createdAt':new Date(createdAt * 1000).toLocaleString()
+            }
+            if (owner!= "0x0000000000000000000000000000000000000000"){
+                offerList.push(offerElement)
+            }
+        }
+        setOffers(offerList)
+    }
+
     async function proccessForm(event){
         event.preventDefault()
         await contract.methods.createOffer(title,description).send({from :account})
@@ -70,17 +104,21 @@ const OfferServices = () => {
         let offerList =[]
         for (let i = 1; i <= offerCounter; i++) {  
             const offer = await contract.methods.offers(i).call()
+            const id = offer[0]
             const title = offer[1]
             const description = offer[2]
             const owner = offer[3]
             const createdAt = offer[4]
             let offerElement = {
+                'id': id,
                 'owner': owner,
                 'title': title,
                 'description':description,
                 'createdAt':new Date(createdAt * 1000).toLocaleString()
             }
-            offerList.push(offerElement)
+            if (owner!= "0x0000000000000000000000000000000000000000"){
+                offerList.push(offerElement)
+            }
         }
         setOffers(offerList)
         onHide('displayResponsive')
@@ -108,17 +146,21 @@ const OfferServices = () => {
             let offerList =[]
             for (let i = 1; i <= offerCounter; i++) {  
                 const offer = await instance.methods.offers(i).call()
+                const id = offer[0]
                 const title = offer[1]
                 const description = offer[2]
                 const owner = offer[3]
                 const createdAt = offer[4]
                 let offerElement = {
+                    'id': id,
                     'owner': owner,
                     'title': title,
                     'description':description,
                     'createdAt':new Date(createdAt * 1000).toLocaleString()
                 }
-                offerList.push(offerElement)
+                if (owner!= "0x0000000000000000000000000000000000000000"){
+                    offerList.push(offerElement)
+                }
             }
             setOffers(offerList)
             return web3;
@@ -159,11 +201,11 @@ const OfferServices = () => {
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" rows={10} rowsPerPageOptions={[5,10,20]}
                     paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}>
-
                         <Column header="Title" sortable filter field="title"></Column>
                         <Column header="Created At" sortable filter field="createdAt"></Column>
                         <Column header="Owner" sortable filter field="owner"></Column>
                         <Column header="Details" body={detailsButton}></Column>
+                        <Column header="Delete" body={deleteButton}></Column>
                     </DataTable>
                 </div>
             </div>
