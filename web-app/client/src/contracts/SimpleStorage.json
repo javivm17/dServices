@@ -1273,11 +1273,11 @@
       "events": {},
       "links": {},
       "address": "0xbc7eD6eeB07c55b00517Afdcd8ccfc1F323DFE72",
-      "transactionHash": "0x11535c1399964f44f727dc4fe7dc1fee68439388c91811f8c95804b244b3fbb0"
+      "transactionHash": "0xd059623930eef33ff0f443e9910a95103f44a3ec6fb14bfe166b2313d3583978"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-02-01T21:31:18.107Z",
+  "updatedAt": "2022-02-02T16:43:25.573Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
