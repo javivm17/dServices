@@ -1,13 +1,14 @@
 import { Button } from 'primereact/button';
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { Dialog } from 'primereact/dialog';
 import Web3 from "web3";
 import React from 'react'
 import OfferServicesContract from "../contracts/OfferServices.json";
 import { DataTable } from 'primereact/datatable';
+import { DataScroller } from 'primereact/datascroller';
 import { Column } from 'primereact/column';
 import { Paginator } from 'primereact/paginator';
-import '../css/Datatable.css';
+import '../css/DataScroll.css';
 
 const OfferServices = () => {
     const [web3Provider, setProvider] = useState([]);
@@ -21,9 +22,25 @@ const OfferServices = () => {
     const [title, setTitle]= useState('');
     const [description, setDescription]= useState('');
     const [offerDetail, setOfferDetail]= useState('');
+
+    const ds = useRef(null);  
+
+    const itemTemplate = (rowData) => {
+        return (
+            <div className="offer">
+                <span className="offer-title">{rowData.title}</span> <span className="offer-detail">{detailsButton(rowData)}</span>
+                <span className="offer-owner">Created by:  {rowData.owner}</span>  <span className="offer-delete">{deleteButton(rowData)}</span>
+                <span className="offer-date">{rowData.createdAt}</span>
+                <hr></hr>
+            </div>
+        );
+    }
+
+    const footer = <Button type="text" icon="pi pi-plus" label="Load" onClick={() => ds.current.load()} />;
+
     
-    const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
-    const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
+    //const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
+    //const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
 
     const dialogFuncMap = {
         'displayResponsive': setDisplayResponsive
@@ -196,18 +213,14 @@ const OfferServices = () => {
                     <br></br><br></br>
                     <p class="text-muted">Your account is: {account}</p>
                 </div>
-                <div className="card-body offerDatatable">
-                    <DataTable styleClass='offerDatatable'value={offers} paginator
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" rows={10} rowsPerPageOptions={[5,10,20]}
-                    paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}>
-                        <Column header="Title" sortable filter field="title"></Column>
-                        <Column header="Created At" sortable filter field="createdAt"></Column>
-                        <Column header="Owner" sortable filter field="owner"></Column>
-                        <Column header="Details" body={detailsButton}></Column>
-                        <Column header="Delete" body={deleteButton}></Column>
-                    </DataTable>
-                </div>
+                <div className="card-body">
+                    <div className="datascroller">
+                        <div className="card">
+                            <DataScroller ref={ds} value={offers}itemTemplate={itemTemplate} rows={5}
+                                loader footer={footer} header="Click Load Button at Footer to Load More" />
+                        </div>
+                    </div>
+                </div> 
             </div>
             <Dialog header="Create a new offer" visible={displayResponsive} onHide={() => onHide('displayResponsive')} breakpoints={{'960px': '75vw'}} style={{width: '50vw'}}>
                 <form class="card card-body rounded-0" id="taskForm">
@@ -224,3 +237,17 @@ const OfferServices = () => {
 
                 
 export default OfferServices;
+/*
+<div className="card-body offerDatatable"> 
+                     <DataTable styleClass='offerDatatable'value={offers} paginator
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" rows={10} rowsPerPageOptions={[5,10,20]}
+                    paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}>
+                        <Column header="Title" sortable filter field="title"></Column>
+                        <Column header="Created At" sortable filter field="createdAt"></Column>
+                        <Column header="Owner" sortable filter field="owner"></Column>
+                        <Column header="Details" body={detailsButton}></Column>
+                        <Column header="Delete" body={deleteButton}></Column>
+                    </DataTable>
+                </div>
+*/

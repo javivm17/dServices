@@ -13,3 +13,18 @@
 .p-datatable-thead span{
     color:white;
 }
+.offer{
+    text-align: left;
+}
+.offer-title{
+    font-weight: 700;
+    font-size: 150%;
+}
+.offer-detail{
+    margin-left: 95%;
+    margin-bottom: 0%;
+}
+.offer-delete{
+    margin-left: 95%;
+    margin-bottom: 0%;
+}
