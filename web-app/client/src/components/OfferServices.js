@@ -147,7 +147,7 @@ const OfferServices = () => {
             // Request account access if needed
             await window.ethereum.enable();
             // Accounts now exposed
-            setConnected(["Connected"])
+            
             const accounts = await web3.eth.getAccounts();
             const networkId = await web3.eth.net.getId();
             const deployedNetwork = OfferServicesContract.networks[networkId];
@@ -179,6 +179,7 @@ const OfferServices = () => {
                     offerList.push(offerElement)
                 }
             }
+            setConnected([accounts[0]])
             setOffers(offerList)
             return web3;
           }
@@ -187,7 +188,7 @@ const OfferServices = () => {
             // Use Mist/MetaMask's provider.
             const web3 = window.web3;
             console.log("Injected web3 detected.");
-            setConnected(["Connected"])
+            setConnected([account])
             return web3;
           }
           // Fallback to localhost; use dev console port by default...
@@ -197,7 +198,7 @@ const OfferServices = () => {
             );
             const web3 = new Web3(provider);
             console.log("No web3 instance injected, using Local web3.");
-            setConnected(["Connected"])
+            setConnected([account])
             return web3;
           }
     }
@@ -208,10 +209,9 @@ const OfferServices = () => {
                 <div className="card-header">
                     <h3>Offer Services</h3>
                     <hr></hr>
-                    <Button disabled={connectedTest != "Connected"} className='p-button-outlined p-button-info p-button-sm' label="Create new offer" icon="pi pi-external-link" onClick={() => onClick('displayResponsive')} />
-                    <Button disabled={connectedTest == "Connected"} onClick={loadEthereum} label={connectedTest} className="p-button-raised p-button-info p-button-sm mx-5" />
+                    <Button disabled={connectedTest != account} className='p-button-outlined p-button-info p-button-sm' label="Create new offer" icon="pi pi-plus" onClick={() => onClick('displayResponsive')} />
+                    <Button disabled={connectedTest == account} icon="pi pi-user" onClick={loadEthereum} label={connectedTest == "Connect"?connectedTest : connectedTest.toString().slice(0,6)+"..."+connectedTest.toString().slice(-5,-1)} className="p-button-raised p-button-info p-button-sm mx-5" />
                     <br></br><br></br>
-                    <p class="text-muted">Your account is: {account}</p>
                 </div>
                 <div className="card-body">
                     <div className="datascroller">
