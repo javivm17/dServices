@@ -6,6 +6,7 @@ import React from 'react'
 import OfferServicesContract from "../contracts/OfferServices.json";
 import { DataScroller } from 'primereact/datascroller';
 import '../css/DataScroll.css';
+import ChatComponent from './ChatComponent';
 
 const OfferServices = () => {
     const [web3Provider, setProvider] = useState([]);
@@ -211,10 +212,17 @@ const OfferServices = () => {
                     <br></br><br></br>
                 </div>
                 <div className="card-body">
-                    <div className="datascroller">
-                        <div className="card">
-                            <DataScroller ref={ds} value={offers}itemTemplate={itemTemplate} rows={5}
-                                loader footer={footer} header="Click Load Button at Footer to Load More" />
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-8 w-75">
+                                <div className="datascroller">
+                                    <div className="card">
+                                        <DataScroller ref={ds} value={offers}itemTemplate={itemTemplate} rows={5}
+                                            loader footer={footer} header="Click Load Button at Footer to Load More" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 w-25"><ChatComponent /></div>
                         </div>
                     </div>
                 </div> 
