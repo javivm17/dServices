@@ -7,6 +7,9 @@ contract ChatContract {
 
     constructor () {
         sendMessage("Primera prueba", "0xA9455F81EA348277efBb581Aaa2370d98AD6dD0f");
+        sendMessage("Segunda prueba", "0xA9455F81EA348277efBb581Aaa2370d98AD6dD0f");
+        sendMessage("Tercera prueba", "0xA9455F81EA348277efBb581Aaa2370d98AD6dD0f");
+        sendMessage("Cuarta prueba", "0xA9455F81EA348277efBb581Aaa2370d98AD6dD0f");
     }
 
     struct Message {

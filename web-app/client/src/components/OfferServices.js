@@ -2,11 +2,12 @@ import { Button } from 'primereact/button';
 import { useEffect, useState,useRef } from "react";
 import { Dialog } from 'primereact/dialog';
 import Web3 from "web3";
-import React from 'react'
+import React from 'react';
 import OfferServicesContract from "../contracts/OfferServices.json";
 import { DataScroller } from 'primereact/datascroller';
 import '../css/DataScroll.css';
 import ChatComponent from './ChatComponent';
+
 
 const OfferServices = () => {
     const [web3Provider, setProvider] = useState([]);
@@ -222,7 +223,8 @@ const OfferServices = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 w-25"><ChatComponent /></div>
+                            <div class="col-4 w-25"><ChatComponent />
+                            </div>
                         </div>
                     </div>
                 </div> 
