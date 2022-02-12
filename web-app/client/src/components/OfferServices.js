@@ -2,13 +2,12 @@ import { Button } from 'primereact/button';
 import { useEffect, useState,useRef } from "react";
 import { Dialog } from 'primereact/dialog';
 import Web3 from "web3";
-import React from 'react'
+import React from 'react';
 import OfferServicesContract from "../contracts/OfferServices.json";
-import { DataTable } from 'primereact/datatable';
 import { DataScroller } from 'primereact/datascroller';
-import { Column } from 'primereact/column';
-import { Paginator } from 'primereact/paginator';
 import '../css/DataScroll.css';
+import ChatComponent from './ChatComponent';
+
 
 const OfferServices = () => {
     const [web3Provider, setProvider] = useState([]);
@@ -214,10 +213,18 @@ const OfferServices = () => {
                     <br></br><br></br>
                 </div>
                 <div className="card-body">
-                    <div className="datascroller">
-                        <div className="card">
-                            <DataScroller ref={ds} value={offers}itemTemplate={itemTemplate} rows={5}
-                                loader footer={footer} header="Click Load Button at Footer to Load More" />
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-8 w-75">
+                                <div className="datascroller">
+                                    <div className="card">
+                                        <DataScroller ref={ds} value={offers}itemTemplate={itemTemplate} rows={5}
+                                            loader footer={footer} header="Click Load Button at Footer to Load More" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 w-25"><ChatComponent />
+                            </div>
                         </div>
                     </div>
                 </div> 
@@ -237,17 +244,3 @@ const OfferServices = () => {
 
                 
 export default OfferServices;
-/*
-<div className="card-body offerDatatable"> 
-                     <DataTable styleClass='offerDatatable'value={offers} paginator
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" rows={10} rowsPerPageOptions={[5,10,20]}
-                    paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}>
-                        <Column header="Title" sortable filter field="title"></Column>
-                        <Column header="Created At" sortable filter field="createdAt"></Column>
-                        <Column header="Owner" sortable filter field="owner"></Column>
-                        <Column header="Details" body={detailsButton}></Column>
-                        <Column header="Delete" body={deleteButton}></Column>
-                    </DataTable>
-                </div>
-*/
