@@ -1,5 +1,6 @@
 import './css/App.css';
 import OfferServices from './components/OfferServices';
+import ChatComponent from './components/ChatComponent';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -17,6 +18,7 @@ function App() {
       <OfferServices  
         contract={contract}
         setContract={setContract}/>
+
     </div>
   );
 }
