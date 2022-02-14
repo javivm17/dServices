@@ -79,11 +79,17 @@ const OfferServices = (props) => {
             }/>
         )
     }
+    function messageButtonHandler(rowData){
+        setSelectedMessage(rowData.owner)
+        window.scrollTo(0, 0)
+    }
 
     function msgButton(rowData){
-        return(
-            <Button icon="pi pi-comment" className="p-button-rounded p-button-sm p-button-success" onClick={() => setSelectedMessage(rowData.owner)} />
-        )
+        if (rowData.owner != props.account){
+            return(
+                <Button icon="pi pi-comment" className="p-button-rounded p-button-sm p-button-success" onClick={() =>messageButtonHandler(rowData)} />
+            )
+        }
     }
 
     function deleteButton(rowData){
@@ -212,7 +218,7 @@ const OfferServices = (props) => {
         <div>
             <div class="card headerService"> 
                 <div className="card-header">
-                    <h3>Offer Services</h3>
+                    <h3><b>Offer Services</b></h3>
                     <hr></hr>
                     <Button disabled={connectedTest != props.account} className='p-button-outlined p-button-info p-button-sm' label="Create new offer" icon="pi pi-plus" onClick={() => onClick('displayResponsive')} />
                     <Button disabled={connectedTest == props.account} icon="pi pi-user" onClick={loadEthereum} label={connectedTest == "Connect"?connectedTest : connectedTest.toString().slice(0,6)+"..."+connectedTest.toString().slice(37,43)} className="p-button-raised p-button-info p-button-sm mx-5" />

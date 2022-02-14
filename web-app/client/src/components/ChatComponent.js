@@ -46,27 +46,31 @@ const ChatComponent = (props)=>{
             return "Other"
         }
     }
-    //"pi pi-user-edit"
+
     function printMsg(messages){
-        return messages.map(message => <div className="flex flex-wrap" align={who(message) == "You"? "right" : "left"}>
-        <Chip label={<div><b>{who(message)}:</b> {message.message}</div>} icon={who(message) == "You"? "pi pi-user" : "pi pi-user-edit"} className="mr-2 mb-2" />
+        return messages.map(message => <div className="flex flex-wrap " align={who(message) == "You"? "right" : "left"}>
+        <Chip label={<div><b>{who(message)}:</b> {message.message}</div>} icon={who(message) == "You"? "pi pi-user" : "pi pi-user-edit"} className={"mr-2 mb-2 "+ who(message)} />
         </div>)
         
     
     }
     return(
-        <div>
+        <div class="chat">
             <div class="card">
                 <div class="card-header">
                     <p><b>{props.receiver}</b></p>
                 </div>
                 <br></br>
-                <p>{printMsg(messages)}</p>
-                                
-                
-                <form id="msgForm" onSubmit={sendMessage}>
-                    <input name="msg" type="text" value={message} placeholder="Text a Message" onChange={msgHandler} class="form-control rounded-0 border-0 my-4 w-75 mx-4"/>
-                </form>
+                <div class="card-body-chat">
+                    <p>{printMsg(messages)}</p>
+                </div>           
+                <div class="form-group text-center">
+                    <form id="msgForm" class ="" onSubmit={sendMessage}>
+                        <div class="input-group">
+                            <input name="msg" type="text" value={message} placeholder="Text a Message" onChange={msgHandler} class="form-control rounded-0 border-1 my-4 w-75 mx-4"/>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     )
