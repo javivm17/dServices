@@ -9,9 +9,8 @@ import '../css/DataScroll.css';
 import ChatComponent from './ChatComponent';
 
 
-const OfferServices = () => {
+const OfferServices = (props) => {
     const [web3Provider, setProvider] = useState([]);
-    const [account, setAccount] = useState(["not connected"]);
     const [connectedTest, setConnected] = useState(["Connect"]);
     const [contract,setContract]= useState([]);
     const [offers,setOffers]= useState([]);
@@ -21,6 +20,7 @@ const OfferServices = () => {
     const [title, setTitle]= useState('');
     const [description, setDescription]= useState('');
     const [offerDetail, setOfferDetail]= useState('');
+    const [selectedMessage, setSelectedMessage]= useState('');
 
     const ds = useRef(null);  
 
@@ -29,7 +29,7 @@ const OfferServices = () => {
             <div className="offer">
                 <span className="offer-title">{rowData.title}</span> <span className="offer-detail">{detailsButton(rowData)}</span>
                 <span className="offer-owner">Created by:  {rowData.owner}</span>  <span className="offer-delete">{deleteButton(rowData)}</span>
-                <span className="offer-date">{rowData.createdAt}</span>
+                <span className="offer-date">{rowData.createdAt}</span> <span className="offer_msg">{msgButton(rowData)}</span>
                 <hr></hr>
             </div>
         );
@@ -80,8 +80,14 @@ const OfferServices = () => {
         )
     }
 
+    function msgButton(rowData){
+        return(
+            <Button icon="pi pi-comment" className="p-button-rounded p-button-sm p-button-success" onClick={() => setSelectedMessage(rowData.owner)} />
+        )
+    }
+
     function deleteButton(rowData){
-        if (rowData.owner == account){
+        if (rowData.owner == props.account){
             return(
                 <Button icon="pi pi-trash" className="p-button-sm p-button-rounded p-button-danger" onClick={() => deleteOffer(rowData.id)}/>
             )
@@ -89,7 +95,7 @@ const OfferServices = () => {
     }
 
     async function deleteOffer(id){
-        await contract.methods.deleteOffer(id).send({from :account})
+        await contract.methods.deleteOffer(id).send({from :props.account})
         const offerCounter = await contract.methods.offerCounter().call()
         let offerList =[]
         for (let i = 1; i <= offerCounter; i++) {  
@@ -115,7 +121,7 @@ const OfferServices = () => {
 
     async function proccessForm(event){
         event.preventDefault()
-        await contract.methods.createOffer(title,description).send({from :account})
+        await contract.methods.createOffer(title,description).send({from :props.account})
         const offerCounter = await contract.methods.offerCounter().call()
         let offerList =[]
         for (let i = 1; i <= offerCounter; i++) {  
@@ -143,15 +149,15 @@ const OfferServices = () => {
     async function loadEthereum(){
         if (window.ethereum) {
             const web3 = new Web3(window.ethereum);
-            // Request account access if needed
+            // Request props.account access if needed
             await window.ethereum.enable();
-            // Accounts now exposed
+            // props.accounts now exposed
             
             const accounts = await web3.eth.getAccounts();
             const networkId = await web3.eth.net.getId();
             const deployedNetwork = OfferServicesContract.networks[networkId];
             setNetworkId(networkId)
-            setAccount(accounts[0])
+            props.setAccount(accounts[0])
             setDeployedNetwork(deployedNetwork)
             const instance = new web3.eth.Contract(
                 OfferServicesContract.abi,
@@ -187,7 +193,7 @@ const OfferServices = () => {
             // Use Mist/MetaMask's provider.
             const web3 = window.web3;
             console.log("Injected web3 detected.");
-            setConnected([account])
+            setConnected([props.account])
             return web3;
           }
           // Fallback to localhost; use dev console port by default...
@@ -197,7 +203,7 @@ const OfferServices = () => {
             );
             const web3 = new Web3(provider);
             console.log("No web3 instance injected, using Local web3.");
-            setConnected([account])
+            setConnected([props.account])
             return web3;
           }
     }
@@ -208,8 +214,8 @@ const OfferServices = () => {
                 <div className="card-header">
                     <h3>Offer Services</h3>
                     <hr></hr>
-                    <Button disabled={connectedTest != account} className='p-button-outlined p-button-info p-button-sm' label="Create new offer" icon="pi pi-plus" onClick={() => onClick('displayResponsive')} />
-                    <Button disabled={connectedTest == account} icon="pi pi-user" onClick={loadEthereum} label={connectedTest == "Connect"?connectedTest : connectedTest.toString().slice(0,6)+"..."+connectedTest.toString().slice(-5,-1)} className="p-button-raised p-button-info p-button-sm mx-5" />
+                    <Button disabled={connectedTest != props.account} className='p-button-outlined p-button-info p-button-sm' label="Create new offer" icon="pi pi-plus" onClick={() => onClick('displayResponsive')} />
+                    <Button disabled={connectedTest == props.account} icon="pi pi-user" onClick={loadEthereum} label={connectedTest == "Connect"?connectedTest : connectedTest.toString().slice(0,6)+"..."+connectedTest.toString().slice(-5,-1)} className="p-button-raised p-button-info p-button-sm mx-5" />
                     <br></br><br></br>
                 </div>
                 <div className="card-body">
@@ -223,7 +229,7 @@ const OfferServices = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 w-25"><ChatComponent />
+                            <div class="col-4 w-25"><ChatComponent account={props.account} receiver={selectedMessage}/>
                             </div>
                         </div>
                     </div>

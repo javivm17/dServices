@@ -12,13 +12,15 @@ import { useEffect, useState,useRef } from "react";
 
 function App() {
   const [contract, setContract] = useState(null);
+  const [account, setAccount] = useState(["not connected"]);
 
   return (
     <div className="App">
       <OfferServices  
         contract={contract}
-        setContract={setContract}/>
-
+        setContract={setContract}
+        account={account}
+        setAccount={setAccount}/>
     </div>
   );
 }
