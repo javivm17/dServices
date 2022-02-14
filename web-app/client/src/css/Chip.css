@@ -1,0 +1,20 @@
+/* Chip.css */
+
+.p-chip.custom-chip {
+    background: var(--primary-color);
+    color: var(--primary-color-text);
+}
+.p-chip.p-component{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.You{
+    background-color: rgb(136, 211, 255) !important;
+}
+.Other{
+    background-color: rgb(150, 170, 196) !important;
+}
+.card-body-chat{
+    height: 300px !important;
+    overflow-y: scroll;
+}
