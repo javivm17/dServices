@@ -215,7 +215,7 @@ const OfferServices = (props) => {
                     <h3>Offer Services</h3>
                     <hr></hr>
                     <Button disabled={connectedTest != props.account} className='p-button-outlined p-button-info p-button-sm' label="Create new offer" icon="pi pi-plus" onClick={() => onClick('displayResponsive')} />
-                    <Button disabled={connectedTest == props.account} icon="pi pi-user" onClick={loadEthereum} label={connectedTest == "Connect"?connectedTest : connectedTest.toString().slice(0,6)+"..."+connectedTest.toString().slice(-5,-1)} className="p-button-raised p-button-info p-button-sm mx-5" />
+                    <Button disabled={connectedTest == props.account} icon="pi pi-user" onClick={loadEthereum} label={connectedTest == "Connect"?connectedTest : connectedTest.toString().slice(0,6)+"..."+connectedTest.toString().slice(37,43)} className="p-button-raised p-button-info p-button-sm mx-5" />
                     <br></br><br></br>
                 </div>
                 <div className="card-body">

@@ -1,0 +1,10 @@
+/* Chip.css */
+
+.p-chip.custom-chip {
+    background: var(--primary-color);
+    color: var(--primary-color-text);
+}
+.p-chip.p-component{
+    margin-left: 5%;
+    margin-right: 5%;
+}
