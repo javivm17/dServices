@@ -7,12 +7,15 @@ import ChatContractNotDeployed from "../contracts/ChatContract.json";
 import Api from "../api/api";
 import { Chip } from 'primereact/chip';
 import '../css/Chip.css';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { ListBox } from 'primereact/listbox';
 
 const ChatComponent = (props)=>{
     const [time, setTime] = useState(Date.now());
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
-    const [line,setLine] =useState("");
+
 
     useEffect(() => {
         const interval = setInterval(() => setTime(Date.now()), 1000);
@@ -52,13 +55,19 @@ const ChatComponent = (props)=>{
         <Chip label={<div><b>{who(message)}:</b> {message.message}</div>} icon={who(message) == "You"? "pi pi-user" : "pi pi-user-edit"} className={"mr-2 mb-2 "+ who(message)} />
         </div>)
         
-    
     }
+    
+    function scrollHandler(e){
+        props.setReceiver(e.value)
+        window.scrollTo(0, 0)
+    }
+
+
     return(
         <div class="chat">
             <div class="card">
                 <div class="card-header">
-                    <p><b>{props.receiver}</b></p>
+                    <p><b>{props.receiver.toString().slice(0,6)+"..."+props.receiver.toString().slice(37,43)}</b></p>
                 </div>
                 <br></br>
                 <div class="card-body-chat">
@@ -71,6 +80,10 @@ const ChatComponent = (props)=>{
                         </div>
                     </form>
                 </div>
+                <div class="card-header">
+                    <p><b>Direct Messages</b></p>
+                </div>
+                <ListBox listStyle={{ height: '250px' }} options={props.communications} onChange={(e) => scrollHandler(e)}/>
             </div>
         </div>
     )

@@ -41,3 +41,22 @@ class GetMessage(generics.CreateAPIView):
         #Convert messages to json
         serializer = serializers.MessageSerializer(messages, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
+
+class ShowAccount(generics.CreateAPIView):
+    @csrf_exempt
+    def post(self, request):
+        body = request.data
+        account = body['account']
+        messages_1 = models.Message.objects.filter(sender=account)
+        messages_2 = models.Message.objects.filter(receiver=account)
+        messages = messages_1 | messages_2
+        result=[]
+        for i in messages:
+            if i.sender == account:
+                result.append(i.receiver)
+            else:
+                result.append(i.sender)
+        result = set(result)
+        #Order messages by timestamp
+        #Convert messages to json
+        return Response(result, status=HTTP_200_OK)
