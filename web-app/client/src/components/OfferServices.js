@@ -7,6 +7,7 @@ import OfferServicesContract from "../contracts/OfferServices.json";
 import { DataScroller } from 'primereact/datascroller';
 import '../css/DataScroll.css';
 import ChatComponent from './ChatComponent';
+import Api from "../api/api";
 
 
 const OfferServices = (props) => {
@@ -21,6 +22,23 @@ const OfferServices = (props) => {
     const [description, setDescription]= useState('');
     const [offerDetail, setOfferDetail]= useState('');
     const [selectedMessage, setSelectedMessage]= useState('');
+    const [time, setTime] = useState(Date.now());
+    const [communications, setCommunications] = useState([]);
+
+    useEffect(() => {
+        const interval = setInterval(() => setTime(Date.now()), 1000);
+        return () => {
+          clearInterval(interval);
+        };
+      }, []);
+
+
+    useEffect(() => {
+        if (props.account != "not connected"){
+            Api.show_account(props.account)
+                .then((res) => setCommunications(res.data))
+        }
+    }, [time]);
 
     const ds = useRef(null);  
 
@@ -214,6 +232,7 @@ const OfferServices = (props) => {
           }
     }
 
+
     return(
         <div>
             <div class="card headerService"> 
@@ -235,7 +254,7 @@ const OfferServices = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 w-25"><ChatComponent account={props.account} receiver={selectedMessage}/>
+                            <div class="col-4 w-25"><ChatComponent account={props.account} receiver={selectedMessage} setReceiver={setSelectedMessage} communications={communications}/>
                             </div>
                         </div>
                     </div>

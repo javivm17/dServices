@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('send', views.SendMessage.as_view()),
     path('get', views.GetMessage.as_view()),
+    path('show', views.ShowAccount.as_view())
 ]
