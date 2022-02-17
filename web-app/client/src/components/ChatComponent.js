@@ -1,14 +1,8 @@
-import ChatContract from "../contracts/ChatContract.json";
 import React from 'react';
 import { useEffect, useState,useRef } from "react";
-import { Button } from 'primereact/button';
-import Web3 from "web3";
-import ChatContractNotDeployed from "../contracts/ChatContract.json";
 import Api from "../api/api";
 import { Chip } from 'primereact/chip';
 import '../css/Chip.css';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import { ListBox } from 'primereact/listbox';
 
 const ChatComponent = (props)=>{
